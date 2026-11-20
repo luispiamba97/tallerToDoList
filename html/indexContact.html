@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact List</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="stylesContact.css">
+</head>
+<body>
+
+  <div class="app-container">
+    <div class="header-icon">
+      <i class="fa-solid fa-address-book"></i>
+    </div>
+
+    <h1>Contact List</h1>
+
+    <div class="form-group">
+      <input id="contact-name" type="text" placeholder="Ingrese Nombre" />
+      <input id="contact-lastname" type="text" placeholder="Ingrese Apellido" />
+      <input id="contact-phone" type="tel" placeholder="Ingrese Telefono" />
+      <input id="contact-city" type="text" placeholder="Ingrese Ciudad" />
+      <button onclick="addContact()">Guardar Contacto</button>
+    </div>
+
+    <div id="contact-list"></div>
+  </div>
+
+  <script src="scriptContact.js"></script>
+</body>
+</html>
