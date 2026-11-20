@@ -1,8 +1,8 @@
 // Modelo de datos inicial (le agregamos un 'id' y 'completed' para poder manipular cada tarea)
 let todos = [
-  { id: 1, title: 'Get groceries', dueDate: '2021-10-04', completed: false },
-  { id: 2, title: 'Wash car', dueDate: '2021-02-03', completed: false },
-  { id: 3, title: 'Make dinner', dueDate: '2021-03-04', completed: false }
+  { id: 1, title: 'Organizar presentacion proyecto de software', dueDate: '2027-10-04', completed: false },
+  { id: 2, title: 'Lavar Moto', dueDate: '2026-12-03', completed: false },
+  { id: 3, title: 'Comprar comida', dueDate: '2026-12-12', completed: false }
 ];
 
 // Renderizar al cargar la página
