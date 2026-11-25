@@ -1,18 +1,17 @@
-// Modelo de datos inicial (le agregamos un 'id' y 'completed' para poder manipular cada tarea)
-let todos = [
-  { id: 1, title: 'Organizar presentacion proyecto de software', dueDate: '2027-10-04', completed: false },
-  { id: 2, title: 'Lavar Moto', dueDate: '2026-12-03', completed: false },
-  { id: 3, title: 'Comprar comida', dueDate: '2026-12-12', completed: false }
-];
+const API_URL = 'http://localhost:3000/api/todos';
+let todos = [];
 
-// Renderizar al cargar la página
-render();
+fetchTodos();
 
-// 1. CREAR TAREA
-function addTodo() {
+async function fetchTodos() {
+  const response = await fetch(API_URL);
+  todos = await response.json();
+  render();
+}
+
+async function addTodo() {
   const textbox = document.getElementById('todo-title');
   const title = textbox.value.trim();
-
   const datePicker = document.getElementById('date-picker');
   const dueDate = datePicker.value;
 
@@ -21,50 +20,43 @@ function addTodo() {
     return;
   }
 
-  todos.push({
-    id: Date.now(), // Genera un ID único basado en la hora actual
-    title: title,
-    dueDate: dueDate,
-    completed: false
+  await fetch(API_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ title, dueDate })
   });
 
-  // Limpiar los campos después de agregar
   textbox.value = '';
   datePicker.value = '';
-
-  render();
+  fetchTodos();
 }
 
-// 2. ELIMINAR TAREA
-function deleteTodo(idToDelete) {
-  todos = todos.filter(function (todo) {
-    return todo.id !== idToDelete;
+async function deleteTodo(idToDelete) {
+  await fetch(`${API_URL}/${idToDelete}`, { method: 'DELETE' });
+  fetchTodos();
+}
+
+async function toggleComplete(todo) {
+  await fetch(`${API_URL}/${todo.id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ completed: !todo.completed })
   });
-  render();
+  fetchTodos();
 }
 
-// 3. MARCAR COMO COMPLETADA
-function toggleComplete(idToToggle) {
-  todos.forEach(function (todo) {
-    if (todo.id === idToToggle) {
-      todo.completed = !todo.completed;
-    }
-  });
-  render();
-}
-
-// 4. EDITAR TAREA
-function editTodo(idToEdit) {
-  const todo = todos.find(t => t.id === idToEdit);
+async function editTodo(todo) {
   const newTitle = prompt('Edita el nombre de la tarea:', todo.title);
-  
   if (newTitle !== null && newTitle.trim() !== '') {
-    todo.title = newTitle.trim();
-    render();
+    await fetch(`${API_URL}/${todo.id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ title: newTitle.trim() })
+    });
+    fetchTodos();
   }
 }
 
-// 5. RENDERIZAR EN PANTALLA
 function render() {
   const todoList = document.getElementById('todo-list');
   todoList.innerHTML = '';
@@ -73,47 +65,35 @@ function render() {
     const element = document.createElement('div');
     element.className = 'todo-item';
 
-    // Contenedor izquierdo (Checkbox + Texto)
     const infoDiv = document.createElement('div');
-    
     const checkbox = document.createElement('input');
     checkbox.type = 'checkbox';
     checkbox.checked = todo.completed;
-    checkbox.onchange = function () {
-      toggleComplete(todo.id);
-    };
+    checkbox.onchange = () => toggleComplete(todo);
 
     const textSpan = document.createElement('span');
     textSpan.innerText = ' ' + todo.title + ' (' + (todo.dueDate || 'Sin fecha') + ')';
-    if (todo.completed) {
-      textSpan.className = 'completed';
-    }
+    if (todo.completed) textSpan.className = 'completed';
 
     infoDiv.appendChild(checkbox);
     infoDiv.appendChild(textSpan);
 
-    // Contenedor derecho (Botones de Editar y Eliminar)
     const actionsDiv = document.createElement('div');
     actionsDiv.className = 'actions';
 
     const editButton = document.createElement('button');
     editButton.innerText = 'Editar';
     editButton.className = 'btn-edit';
-    editButton.onclick = function () {
-      editTodo(todo.id);
-    };
+    editButton.onclick = () => editTodo(todo);
 
     const deleteButton = document.createElement('button');
     deleteButton.innerText = 'Eliminar';
     deleteButton.className = 'btn-delete';
-    deleteButton.onclick = function () {
-      deleteTodo(todo.id);
-    };
+    deleteButton.onclick = () => deleteTodo(todo.id);
 
     actionsDiv.appendChild(editButton);
     actionsDiv.appendChild(deleteButton);
 
-    // Unir todo al elemento principal
     element.appendChild(infoDiv);
     element.appendChild(actionsDiv);
     todoList.appendChild(element);
