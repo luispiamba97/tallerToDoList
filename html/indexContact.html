@@ -3,30 +3,28 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Contact List</title>
+  <title>Contact List + API</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="stylesContact.css">
 </head>
 <body>
-
   <div class="app-container">
+    <nav style="margin-bottom: 15px; text-align: left;">
+      <a href="index.html" style="color: #222; text-decoration: none; font-weight: bold;">← Ir a To-Do List</a>
+    </nav>
     <div class="header-icon">
       <i class="fa-solid fa-address-book"></i>
     </div>
-
     <h1>Contact List</h1>
-
     <div class="form-group">
-      <input id="contact-name" type="text" placeholder="Ingrese Nombre" />
-      <input id="contact-lastname" type="text" placeholder="Ingrese Apellido" />
-      <input id="contact-phone" type="tel" placeholder="Ingrese Telefono" />
-      <input id="contact-city" type="text" placeholder="Ingrese Ciudad" />
+      <input id="contact-name" type="text" placeholder="Ingrese su nombre" />
+      <input id="contact-lastname" type="text" placeholder="Ingrese su apellido" />
+      <input id="contact-phone" type="tel" placeholder="Ingrese su teléfono" />
+      <input id="contact-city" type="text" placeholder="Ingrese su ciudad" />
       <button onclick="addContact()">Guardar Contacto</button>
     </div>
-
     <div id="contact-list"></div>
   </div>
-
   <script src="scriptContact.js"></script>
 </body>
 </html>

@@ -1,0 +1,27 @@
+{
+  "name": "miprimerservidor",
+  "version": "1.0.0",
+  "description": "Creando un servidor usando express",
+  "keywords": [
+    "servidor"
+  ],
+  "homepage": "https://github.com/luispiamba97/tallerToDoList#readme",
+  "bugs": {
+    "url": "https://github.com/luispiamba97/tallerToDoList/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/luispiamba97/tallerToDoList.git"
+  },
+  "license": "ISC",
+  "author": "lpiamba",
+  "type": "commonjs",
+  "main": "mains.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "cors": "^2.8.6",
+    "express": "^5.3.0"
+  }
+}

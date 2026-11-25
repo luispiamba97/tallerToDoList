@@ -1,12 +1,15 @@
-let contacts = JSON.parse(localStorage.getItem('contacts')) || [];
+const API_CONTACTS = 'http://localhost:3000/api/contacts';
+let contacts = [];
 
-render();
+fetchContacts();
 
-function saveToLocalStorage() {
-  localStorage.setItem('contacts', JSON.stringify(contacts));
+async function fetchContacts() {
+  const response = await fetch(API_CONTACTS);
+  contacts = await response.json();
+  render();
 }
 
-function addContact() {
+async function addContact() {
   const nameInput = document.getElementById('contact-name');
   const lastnameInput = document.getElementById('contact-lastname');
   const phoneInput = document.getElementById('contact-phone');
@@ -22,30 +25,43 @@ function addContact() {
     return;
   }
 
-  contacts.push({
-    id: Date.now(),
-    name: name,
-    lastname: lastname,
-    phone: phone,
-    city: city
+  await fetch(API_CONTACTS, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name, lastname, phone, city })
   });
-
-  saveToLocalStorage();
-  render();
 
   nameInput.value = '';
   lastnameInput.value = '';
   phoneInput.value = '';
   cityInput.value = '';
+  fetchContacts();
 }
 
-function deleteContact(idToDelete) {
-  contacts = contacts.filter(function (contact) {
-    return contact.id !== idToDelete;
-  });
+async function editContact(contact) {
+  const newName = prompt('Nuevo nombre:', contact.name);
+  const newLastname = prompt('Nuevo apellido:', contact.lastname);
+  const newPhone = prompt('Nuevo teléfono:', contact.phone);
+  const newCity = prompt('Nueva ciudad:', contact.city);
 
-  saveToLocalStorage();
-  render();
+  if (newName && newLastname && newPhone && newCity) {
+    await fetch(`${API_CONTACTS}/${contact.id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: newName.trim(),
+        lastname: newLastname.trim(),
+        phone: newPhone.trim(),
+        city: newCity.trim()
+      })
+    });
+    fetchContacts();
+  }
+}
+
+async function deleteContact(idToDelete) {
+  await fetch(`${API_CONTACTS}/${idToDelete}`, { method: 'DELETE' });
+  fetchContacts();
 }
 
 function render() {
@@ -63,15 +79,28 @@ function render() {
       <span>📞 ${contact.phone} | 📍 ${contact.city}</span>
     `;
 
+    const actionsDiv = document.createElement('div');
+    actionsDiv.style.display = 'flex';
+    actionsDiv.style.gap = '5px';
+
+    const editBtn = document.createElement('button');
+    editBtn.innerText = 'Editar';
+    editBtn.style.backgroundColor = '#ffc107';
+    editBtn.style.color = '#000';
+    editBtn.style.padding = '6px 10px';
+    editBtn.style.fontSize = '12px';
+    editBtn.onclick = () => editContact(contact);
+
     const deleteBtn = document.createElement('button');
     deleteBtn.innerText = 'Eliminar';
     deleteBtn.className = 'btn-delete';
-    deleteBtn.onclick = function () {
-      deleteContact(contact.id);
-    };
+    deleteBtn.onclick = () => deleteContact(contact.id);
+
+    actionsDiv.appendChild(editBtn);
+    actionsDiv.appendChild(deleteBtn);
 
     card.appendChild(infoDiv);
-    card.appendChild(deleteBtn);
+    card.appendChild(actionsDiv);
     contactList.appendChild(card);
   });
 }
